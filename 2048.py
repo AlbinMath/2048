@@ -13,7 +13,7 @@ class Game2048Tkinter:
         self.root.title("2048 Game")
         
         # Game configuration with fixed 4x4 grid
-        self.grid_size = 4  # Fixed size
+        self.grid_size = 4  
         self.cell_size = 100
         self.padding = 10
         self.score = 0
@@ -36,7 +36,7 @@ class Game2048Tkinter:
         mixer.init()
         self.load_sounds()
         
-        # Color scheme
+        
         self.setup_colors()
         
         # Configure root window
@@ -44,19 +44,19 @@ class Game2048Tkinter:
         self.root.minsize(400, 500)
         self.setup_menu()
         
-        # Initialize game
+       
         self.initialize_game()
         
-        # Key bindings
+        
         self.setup_key_bindings()
     
     def setup_colors(self):
         """Configure the color scheme for the game"""
-        self.bg_color = "#121212"  # Dark background
-        self.frame_bg = "#1E1E1E"  # Slightly lighter than background
-        self.text_color = "#FFFFFF"  # White text
-        self.empty_color = "#2D2D2D"  # Dark gray for empty cells
-        self.tutorial_highlight = "#FFD700"  # Gold for tutorial highlights
+        self.bg_color = "#121212"  
+        self.frame_bg = "#1E1E1E"  
+        self.text_color = "#FFFFFF"  
+        self.empty_color = "#2D2D2D"  
+        self.tutorial_highlight = "#FFD700"  
         
         # Different colors for different tile values
         self.tile_colors = {
@@ -187,7 +187,7 @@ class Game2048Tkinter:
                 row.append(cell)
             self.cells.append(row)
         
-        # Tutorial label (initially hidden)
+        # Tutorial label
         self.tutorial_label = tk.Label(
             self.root,
             text="",
@@ -342,17 +342,15 @@ class Game2048Tkinter:
             )
             
             if not save_name:
-                return  # User cancelled
-            
-            # Ensure the name ends with .json
+                return  
+
             if not save_name.lower().endswith('.json'):
                 save_name += '.json'
             
-            # Create the save directory if it doesn't exist
+            
             save_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),  "saved")
             os.makedirs(save_dir, exist_ok=True)
-            
-            # Save to the new directory
+
             filename = os.path.join(save_dir, save_name)
             
             with open(filename, "w") as f:
@@ -364,18 +362,16 @@ class Game2048Tkinter:
     def load_game(self):
         """Load a game state from a file"""
         try:
-            # Create the save directory if it doesn't exist
+
             save_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "2048", "saved")
             os.makedirs(save_dir, exist_ok=True)
-            
-            # Get list of save files in the directory
+
             save_files = [f for f in os.listdir(save_dir) if f.endswith(".json")]
             
             if not save_files:
                 messagebox.showinfo("No Saved Games", "No saved games found.")
                 return
             
-            # Let user select a file
             selected_file = simpledialog.askstring(
                 "Load Game",
                 "Enter save file name:\n\n" + "\n".join(save_files),
@@ -395,12 +391,10 @@ class Game2048Tkinter:
             with open(full_path, "r") as f:
                 game_state = json.load(f)
             
-            # Validate the loaded game state
             if not all(key in game_state for key in ["grid", "score", "moves_count"]):
                 messagebox.showerror("Load Error", "Invalid save file format.")
                 return
             
-            # Clear existing widgets
             if hasattr(self, 'score_frame'):
                 self.score_frame.destroy()
             if hasattr(self, 'grid_frame'):
@@ -434,7 +428,7 @@ class Game2048Tkinter:
     def add_random_tile(self):
         """Add a random tile (2 or 4) to an empty cell"""
         if self.tutorial_mode and self.tutorial_step < 5:
-            return  # Don't add random tiles during tutorial
+            return 
             
         empty_cells = [(i, j) for i in range(self.grid_size) 
                       for j in range(self.grid_size) if self.grid[i][j] == 0]
@@ -444,7 +438,6 @@ class Game2048Tkinter:
     
     def update_ui(self):
         """Update the game interface"""
-        # Update grid cells
         for i in range(self.grid_size):
             for j in range(self.grid_size):
                 value = self.grid[i][j]
@@ -460,8 +453,7 @@ class Game2048Tkinter:
         self.score_label.config(text=f"Score: {self.score}")
         self.high_score_label.config(text=f"High Score: {self.high_score}")
         self.moves_label.config(text=f"Moves: {self.moves_count}")
-        
-        # Update tutorial highlights if in tutorial mode
+
         if self.tutorial_mode:
             self.highlight_tutorial_tiles()
     
@@ -490,13 +482,13 @@ class Game2048Tkinter:
         merge_positions = set()
         
         # Process the move based on direction
-        if direction == 0:  # Up
+        if direction == 0: 
             moved = self.process_move_up(merge_positions)
-        elif direction == 1:  # Right
+        elif direction == 1: 
             moved = self.process_move_right(merge_positions)
-        elif direction == 2:  # Down
+        elif direction == 2:  
             moved = self.process_move_down(merge_positions)
-        elif direction == 3:  # Left
+        elif direction == 3: 
             moved = self.process_move_left(merge_positions)
         
         if moved:
@@ -527,15 +519,15 @@ class Game2048Tkinter:
     
     def handle_tutorial_progress(self, direction):
         """Handle tutorial progress after a move"""
-        if self.tutorial_step == 1 and direction == 1:  # Right move
+        if self.tutorial_step == 1 and direction == 1: 
             self.tutorial_step += 1
             self.play_sound("tutorial")
             self.update_tutorial_instruction()
-        elif self.tutorial_step == 3 and direction == 0:  # Up move
+        elif self.tutorial_step == 3 and direction == 0: 
             self.tutorial_step += 1
             self.play_sound("tutorial")
             self.update_tutorial_instruction()
-        elif self.tutorial_step >= 5:  # Tutorial complete
+        elif self.tutorial_step >= 5:  
             self.tutorial_mode = False
             self.tutorial_label.pack_forget()
             self.add_random_tile()
